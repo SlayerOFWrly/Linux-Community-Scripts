@@ -1,0 +1,58 @@
+Install BSG launcher via Lutris Install Script from their website, once download completed, copy the game or use the existing install and extract all SPT .zip contents  > "Escape From Tarkov" root directory, enter account credentials to BSGLauncher then proceed to install
+
+"sudo pacman -S aspnet-runtime-9.0" (This is a requirement for Arch Systems to be able to launch SPT, as of 2025-14-12)
+
+In lutris you duplicate the vanilla EFT install,give it a new name, then over to game options in the configure tab, the "Executable" should now point to the "SPT.Launcher.exe".
+
+The rest of this install will work on that SPT version of Tarkov,
+
+In lutris click the arrow directly beside the wine icon, open a bash terminal and run "winetricks --self-update", "winetricks -q arial times vcrun2022 dotnetdesktop6 dotdesktop8" and finally "dotnetdesktop9"
+
+Clicking now the arrow next to Start in lutris: Click Configure and then "Runner Options" "DLL Overrides", add "winhttp" as a key and the value is "n,b"
+
+click over to "System Runner"  tab, then add these Enviroment Variables "DOTNET_ROOT" and lastly "DOTNET_BUNDLE_EXTRACT_BASE_DIR" (these don't require a value to work)
+
+
+If all goes well you should be able to run "./SPT.Server.Linux" from the bash terminal we opened earlier (or alternatively you can open a terminal in the file location of your EFT install),
+
+you'll need to navigate to your EFT install folder and depending on file placement that SPT.Server.Linux will be either in your EFT install or in the SPT folder somewhere, just use "ls" to list files, or "cd" to change directory or there is a file manager you can use to find it,launch it, and then launch SPT from Lutris, you should now see an update to the server terminal as well as the client window open prompting for login, if all goes well you can create a user and then launch the game as you would normally,
+
+Job done.
+
+To note, If any errors occur it may be worth looking into Downgrading your EFT Install as SPT may not support the current live build version from BSG
+
+Edit: SPT does not currenty work with the recent version of EFT, link is below with the instructions on how to downgrade/DownPatch your EFT files to get a sucessful game launch.
+
+Downgrading:
+
+(links to files here)
+https://github.com/MadByteDE/SPT-Linux-Guide/blob/main/scripts/spt-additions
+https://mirror.spt.dev/patchers/
+
+In the case you need to downgrade visit "MadByteDE"s original repo and find the downpatcher that is suitable for your game version and then download the raw spt-additions file,
+
+extract the patcher contents into the root of your EFT folder (the one with all the SPT stuff from earlier), and rename the "spt-additions" > "spt-additions.sh"
+
+"sudo chmod +x spt-additions.sh" (this makes that script file executable)
+
+change the last of this path below to where you saved your EFT, hit enter and it should patch the files
+
+"./spt-linux-additions patch ~/Games/escape-from-tarkov/drive_c/SPTarkov" (Change SPTarkov to whatever your EFT folder is named)
+
+
+Thanks and credits go to "MadByteDE" and "CWXDEV" (and the many other contributors) for the original guide I followed, there is also the automated install on "MadByteDE"s Github (Link Below), I chose the manual install as it was quicker and easier for me. I figured I would share this as it's another script that I have used on my system for games and such alike. This is not the orignal script but it's close and should function the same, I just adapted the readme into an easier format for my own reading. I do not take credit in developing the readme or anything associated with it,
+
+Further Contributor credits:
+
+
+    APoorDev
+    dj3hac
+    Laserpulse
+    LinuxFromMars
+    MadByte
+    nyuware
+    Penkov
+    TheSpectator
+    Witek
+
+    https://github.com/MadByteDE/SPT-Linux-Guide
