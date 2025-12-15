@@ -1,0 +1,121 @@
+Requirements and Limitations:
+
+TS6 requires a non local account one that is registered with TeamSpeak themselves and not a local account, though after the beta phase this plans to be done locally. The reason given from a dev from my understanding was due to permission issues as sen from those familiar with MATRIX, Permission issues have plagued functionality over there.
+
+Licensing, on a free license of TS6 you are limited to 32 Users per server instance, they have a subscription based model with various tiers which increases this cap, this can be a deal breaker for many depending on use case
+
+along with a 2 month evaluation license in which you would need to renew every so often to keep your server up and running, in other words, don't expect to use this for production systems as it's beta,
+
+potentially there is a connection limit on the free tier though I have not tested this either. Just some quick steps to get you up and running,
+
+(Link To TeamSpeak6 Github for further information if required :)
+https://github.com/teamspeak/teamspeak6-server/tree/v6.0.0/beta7
+
+
+TS6-Beta7 (TeamSpeak6)
+
+I use this on an Ubuntu VM instance but other distros should follow similarly, just swap out the syntax in place for your distro, should be easy to find
+
+Install is as follows, release notes down below:
+
+Login to your TLD (Top Level Domain) (Cloudflare, Porkbun, etc)
+
+from here we create an "A" Record
+
+"A" Record: "ts.YourDomain.com" which should point to your Public IPV4 or IPV6 (I only tested with IPV4) (You of course swap YourDomain.com to whatever your real domain is)
+
+
+
+PortForwarding:
+
+ip addr (Within your VM, You want to look for your ethernet connection or wireless network, could look something like eth0, ens7p0, and so on)
+
+you now want to login to your routers gateway and assign these ports to that IP, the ports are as follow,
+
+30033, 10011, and lastly, 9987
+
+We are now done with the networking portion (assuming no errors further on into install)
+
+
+
+TeamSpeak6 Server Install:
+
+download the release, in this case 6.0.0-Beta7 (Have a look over on the official repo for updates),
+
+wget https://github.com/teamspeak/teamspeak6-server/releases/download/v6.0.0%2Fbeta7/teamspeak-server_linux_amd64-v6.0.0-beta7.tar.bz2
+
+sudo apt install "tar"
+
+tar -xf teamspeak-server_linux_amd64-v6.0.0-beta7.tar.bz2
+
+sudo rm -r teamspeak-server_linux_amd64-v6.0.0-beta7.tar.bz2
+
+cd teamspeak-server_linux_amd64
+
+(incase it's not executable, run this command)
+sudo chmod +x tsserver
+
+(to start the server)
+./tsserver --accept-license
+
+(MAKE A NOTE OF THE IMPORTANT INFORMATION, COPY PASTE THE TWO --IMPORTANT-- OUTPUT CONTENT SOMEWHERE SAFE, YOU WON'T BE ABLE TO SEE IT AGAIN WITHOUT REINSTALL)
+
+(for those who don't need autostart and want to manually launch via ./tsserver --accept-license each time in cli, you can skip this portion and go straight to Client setup)
+Now we can create a systemd entry for autostart:
+
+sudo nano /etc/systemd/system/teamspeak6.service (Copy and paste the content below into that file)
+
+[Unit]
+Description=TeamSpeak 6 Server
+After=network.target
+
+[Service]
+User=root
+Group=root
+WorkingDirectory=/root/teamspeak-server_linux_amd64
+ExecStart=/root/teamspeak-server_linux_amd64/tsserver --accept-license
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+
+now we run,
+
+sudo systemctl daemon-reload
+sudo systemctl enable teamspeak6.service
+sudo systemctl start teamspeak6.service
+
+
+Client Setup:
+
+(again replace yay -S with your distros specifc syntax, for me I run it on my host system which is Arch)
+for me the command is "yay -S teamspeak" (teamspeak 6.0.0beta3.4-1, as of 2025-14-12)
+
+
+
+once installed you create an account, (this account is stored on TeamSpeaks servers until end of beta where they will hopefully add local account creation on homeserver)
+
+Search in the tab on the top left, input your A record we made earlier (ts.YourDomain.com) (again swith YourDOmain.com to whatever your real domain is)
+
+you should now join the server in which it will default join you into a Voice Call (VC)
+
+From here you consult with that IMPORTANT blocks we saved earlier and use the admin details to claim ownership of the server.
+
+
+
+And there you have it, Not nearly as secure as Matrix but a lot less of a headache to configure and setup for if you have a small group wanting to quickly connect
+
+
+Final Thoughts (not related to install):
+
+
+All I was able to find on this topic was tutorials for a VPS(Virtual Private Server) install. I personally don't use a VPS as I prefer to have my data local and not on a random server I have zero physical access too, as it's not just my data but data from users to think about as well.
+
+As such here is a quick setup for those who use a TLD (Top Level Domain) setup. I've only tested this with a Porkbun.com Domain and from my limited time testing, messaging and screenshare works, though I have not tested Voice calls as none of my friends want to unshackle from Discord, Facebook and the rest alike as of yet, but I imagine that the calling works.
+
+To highlight, this is one of the very few services in this repo with a Subscription model, there are limited alternatives for chat and calling with many on forums calling out for alternatives that meet the modern standards we have come to know today, minus the fluff. With Matrix going the ESS Element subscription route for daily updates, along with the few smaller projects actively being maintained by a single dev or small teams (bless them).
+
+Finding a Client/Server setup that offers these features without persistent issues plauging them has been a challange. Before I was using Matrix with Jitsi, but with ESS subscription model and many disabling federation for good reasons it limits updates and features available, not to mention my Jitsi instance had constant frame drops.
+
+Maybe someday, Matrix will solve many of these issues and adapt many features in a user friendly way, their encryption offerings are far superior than TeamSpeak and configurable, which is why I opted for Matrix intially back at the begininng of my HomeLab journey
