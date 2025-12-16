@@ -1,0 +1,22 @@
+Discord Update Shortcut
+
+So discord on arch doesn't auto update, you have to manually unpack the .deb and convert to a useable package to install on Arch, 
+
+Requirements: Debtap
+
+Open Discord and when it prompts you to download the updater, Select the Ubuntu .deb,
+
+it will save it to Downloads or your default location, 
+
+now we run 
+(replace 0.0.119 with the version in the filename)
+debtap discord-0.0.119.deb 
+
+lastly, sudo pacman -U discord-0.0.119-1-x86_64.pkg.tar.zst, 
+
+No auto updaters required or security risks from using third party-clients, like (Defunkt thankfully) Bluecord, 
+and the many others which siphened tokens to access accounts, 
+all thanks to discord not requirng 2FA for QRLogins, meaning anyone could send spam from your account and read your DMs, 
+A major security risk that is still not addressed. 
+Never use the QRlogin, QR codes are not secure and if there is anything snooping between you and their servers (MITM) or a third party client
+then they can collect and decrypt your token to then have access to your account,
